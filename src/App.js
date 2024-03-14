@@ -22,7 +22,7 @@ function App() {
   return (
     <div className="App">
       <PieChart data={data} width={200} height={200} radius={75} lineWidth={15} fontSize={30}/>
-      <Thermometer data={data} width={200} height={200} radius={75} lineWidth={15} fontSize={30}/>
+      <Thermometer data={data} width={600} height={200} radius={75} lineWidth={15} fontSize={30}/>
     </div>
   );
 }

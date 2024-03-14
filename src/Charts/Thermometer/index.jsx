@@ -17,10 +17,33 @@ const Thermometer = ({data, width, height, radius, lineWidth, fontSize}) => {
             
             ctx.lineWidth = lineWidth;
 
+            // normalize against total records
+
+            const x = 20;
+            const thermometerLength = 450;
+            const recordLength = thermometerLength / totalRecords;
+
+            let y = 10;
             for (let i=0; i<data.length; i++) {
                 const d = data[i];
-                const fraction = d.count / totalRecords;
-            }
+                ctx.lineCap = "round";
+                ctx.lineWidth = 20;
+                ctx.strokeStyle = "grey";
+                
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + thermometerLength, y);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.strokeStyle = d.color;
+                const length = recordLength * d.count; 
+                ctx.moveTo(x, y);
+                ctx.lineTo(length, y);
+                ctx.stroke();
+               
+                y += 40;
+            }            
         }
         
         return () => {
