@@ -1,49 +1,62 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 const Thermometer = ({data, width, height, radius, lineWidth, fontSize}) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        return () => {
-            canvasRef.current = null;
-        }
-    }, []);
-
-    useEffect(() => {
         if (canvasRef.current) {
             const canvas = canvasRef.current;
             const ctx = canvas.getContext("2d");
-            const totalRecords = data.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0);
             
             ctx.lineWidth = lineWidth;
-
-            // normalize against total records
-
             const x = 20;
-            const thermometerLength = 450;
-            const recordLength = thermometerLength / totalRecords;
+            const thermometerLength = 450;            
 
             let y = 10;
+            
+            ctx.lineCap = "round";
+            ctx.lineWidth = 20;
+            ctx.strokeStyle = "grey";
+
+            // first draw the grey bars
             for (let i=0; i<data.length; i++) {
-                const d = data[i];
-                ctx.lineCap = "round";
-                ctx.lineWidth = 20;
-                ctx.strokeStyle = "grey";
-                
                 ctx.beginPath();
                 ctx.moveTo(x, y);
                 ctx.lineTo(x + thermometerLength, y);
                 ctx.stroke();
-                
-                ctx.beginPath();
-                ctx.strokeStyle = d.color;
-                const length = recordLength * d.count; 
-                ctx.moveTo(x, y);
-                ctx.lineTo(length, y);
-                ctx.stroke();
                
                 y += 40;
-            }            
+            } 
+
+            y = 10;
+            
+            // next draw the color bar
+            const totalRecords = data.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0);
+
+            let stepMultiplier = 0.2;
+            
+            const drawBars = () => {
+                for (let i=0; i<data.length; i++) {
+                    const localY = y + (i*40);
+                    const d = data[i];
+                    ctx.strokeStyle = d.color;
+    
+                    const finalLength = (d.count / totalRecords) * thermometerLength;
+                    const currentLength = stepMultiplier * finalLength;
+
+                    ctx.beginPath();
+                    ctx.moveTo(x, localY);
+                    ctx.lineTo(currentLength, localY);
+                    ctx.stroke();
+                }
+
+                if(stepMultiplier < 1) {
+                    stepMultiplier += 0.1;
+                    window.requestAnimationFrame(drawBars);
+                }
+            }
+            
+            window.requestAnimationFrame(drawBars);
         }
         
         return () => {
