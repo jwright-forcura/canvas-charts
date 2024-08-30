@@ -16,8 +16,9 @@ const PieChart = ({data, width, height, radius, lineWidth, fontSize}) => {
 
             let stepMultiplier = 0.2;
             
-            const drawChart = () => {          
-                ctx.clearRect(0,0,canvas.width, canvas.height);   
+            const drawChart = () => {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+
                 // print text
                 ctx.fillstyle = "black";
                 ctx.font = `${fontSize}px sans-serif`;
@@ -43,7 +44,7 @@ const PieChart = ({data, width, height, radius, lineWidth, fontSize}) => {
                     ctx.stroke();
                 }
 
-                if(stepMultiplier < 1) {                    
+                if(stepMultiplier < 1) {
                     stepMultiplier += 0.05;
                     window.requestAnimationFrame(drawChart);
                 }
