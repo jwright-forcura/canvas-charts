@@ -4,7 +4,7 @@ const PieChart = ({data, width, height, radius, lineWidth, fontSize}) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        if (canvasRef.current) {            
+        if (canvasRef.current) {
             const canvas = canvasRef.current;
             const ctx = canvas.getContext("2d");
             const totalRecords = data.reduce((accumulator, currentValue) => accumulator + currentValue.count, 0);
@@ -18,9 +18,7 @@ const PieChart = ({data, width, height, radius, lineWidth, fontSize}) => {
             
             const drawChart = () => {
                 ctx.clearRect(0,0,canvas.width, canvas.height);
-
-                // print text
-                ctx.fillstyle = "black";
+                ctx.fillStyle = "white";
                 ctx.font = `${fontSize}px sans-serif`;
                 const text = totalRecords.toString();
                 const { width, actualBoundingBoxAscent, actualBoundingBoxDescent } = ctx.measureText(text);
@@ -39,13 +37,18 @@ const PieChart = ({data, width, height, radius, lineWidth, fontSize}) => {
 
                     ctx.strokeStyle = d.color;
                     ctx.beginPath();                
-                    ctx.arc(xMid, yMid, radius, pathStart + radianGap, pathStart + radians - radianGap, false);                    
+                    ctx.arc(xMid, 
+                        yMid, 
+                        radius, 
+                        pathStart + radianGap, 
+                        pathStart + radians - radianGap, 
+                        false);
                     pathStart = pathEnd;
                     ctx.stroke();
                 }
 
                 if(stepMultiplier < 1) {
-                    stepMultiplier += 0.05;
+                    stepMultiplier += 0.01;
                     window.requestAnimationFrame(drawChart);
                 }
             }
@@ -62,8 +65,15 @@ const PieChart = ({data, width, height, radius, lineWidth, fontSize}) => {
         }
     }, [data, width, height, radius, lineWidth, fontSize]);
 
+    const styleProps = {
+        height: `${height}px`, 
+        width: `${width}px`, 
+        background: "#1b1b1b", 
+        overflow: "hidden"
+    };
+
     return (
-        <div style={{height: `${height}px`, width: `${width}px`, background: "white", overflow: "hidden"}}>
+        <div style={{...styleProps}}>
             <canvas ref={canvasRef} height={`${height}px`} width={`${width}px`}></canvas>
         </div>
     )

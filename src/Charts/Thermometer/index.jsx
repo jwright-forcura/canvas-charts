@@ -42,7 +42,7 @@ const Thermometer = ({data, width, height, radius, lineWidth, fontSize}) => {
                     ctx.strokeStyle = d.color;
     
                     const finalLength = (d.count / totalRecords) * thermometerLength;
-                    const currentLength = stepMultiplier * finalLength;
+                    const currentLength = x + (stepMultiplier * finalLength);
 
                     ctx.beginPath();
                     ctx.moveTo(x, localY);
@@ -51,7 +51,7 @@ const Thermometer = ({data, width, height, radius, lineWidth, fontSize}) => {
                 }
 
                 if(stepMultiplier < 1) {
-                    stepMultiplier += 0.1;
+                    stepMultiplier += 0.01;
                     window.requestAnimationFrame(drawBars);
                 }
             }
@@ -68,8 +68,10 @@ const Thermometer = ({data, width, height, radius, lineWidth, fontSize}) => {
         }
     }, [data, width, height, radius, lineWidth, fontSize]);
 
+    const styleProps = {height: `${height}px`, width: `${width}px`, background: "#1b1b1b", overflow: "hidden"};
+
     return (
-        <div style={{height: `${height}px`, width: `${width}px`, background: "white", overflow: "hidden"}}>
+        <div style={{...styleProps}}>
             <canvas ref={canvasRef} height={`${height}px`} width={`${width}px`}></canvas>
         </div>
     )
